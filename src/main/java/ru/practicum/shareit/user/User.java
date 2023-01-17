@@ -3,6 +3,8 @@ package ru.practicum.shareit.user;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * TODO Sprint add-controllers.
  */
@@ -13,6 +15,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level= AccessLevel.PRIVATE)
 public class User {
     Long id;
+    @NonNull
+    @NotBlank
     String name;
+    @NonNull
+    @NotBlank
     String email;
 }

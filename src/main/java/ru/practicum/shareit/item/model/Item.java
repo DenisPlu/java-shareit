@@ -24,7 +24,7 @@ public class Item {
     String name;
     @Size(max = 200)
     String description;
-    boolean availableStatus;
+    boolean available;
     User owner;
     @Positive
     Long currentRequestId;

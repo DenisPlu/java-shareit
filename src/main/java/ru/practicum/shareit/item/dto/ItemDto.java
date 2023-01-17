@@ -22,5 +22,5 @@ public class ItemDto {
     String name;
     @Size(max = 200)
     String description;
-    boolean availableStatus;
+    boolean available;
 }
