@@ -10,7 +10,7 @@ public interface ItemService {
 
     Item get(Long id);
 
-    List <ItemDto> searchInNameAndDescription(String text);
+    List<ItemDto> searchInNameAndDescription(String text);
 
     ItemDto create(ItemDto item, Long ownerId);
 

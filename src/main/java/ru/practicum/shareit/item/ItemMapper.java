@@ -12,6 +12,7 @@ public class ItemMapper {
                 Boolean.parseBoolean(item.getAvailable())
         );
     }
+
     public static Item toItemFromDto(Long id, ItemDto itemDto, Long ownerId) {
         return new Item(
                 id,

@@ -28,12 +28,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List <ItemDto> searchInNameAndDescription(String text) {
+    public List<ItemDto> searchInNameAndDescription(String text) {
         return itemInMemoryStorage.searchInNameAndDescription(text);
     }
 
     @Override
-    public ItemDto create (ItemDto item, Long ownerId) {
+    public ItemDto create(ItemDto item, Long ownerId) {
         if (item.isAvailable() && Optional.ofNullable(item.getDescription()).isPresent()) {
             if (userInMemoryStorage.getUserMap().containsKey(ownerId) && item.isAvailable()) {
                 return itemInMemoryStorage.create(item, ownerId);

@@ -30,7 +30,7 @@ public class UserInMemoryStorage implements UserStorage {
     }
 
     @Override
-    public User create (User user) {
+    public User create(User user) {
         if (!user.getEmail().contains("@")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный формат email");
         } else {
@@ -45,7 +45,7 @@ public class UserInMemoryStorage implements UserStorage {
     }
 
     @Override
-    public User update (Long id, User user) {
+    public User update(Long id, User user) {
         if (Optional.ofNullable(user.getName()).isPresent()) {
             userMap.get(id).setName(user.getName());
         }
@@ -64,7 +64,7 @@ public class UserInMemoryStorage implements UserStorage {
     }
 
     @Override
-    public void delete (Long id) {
+    public void delete(Long id) {
         userMap.remove(id);
     }
 

@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
     Long id;
     @NotBlank

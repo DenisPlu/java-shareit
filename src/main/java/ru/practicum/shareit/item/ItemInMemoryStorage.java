@@ -44,7 +44,7 @@ public class ItemInMemoryStorage implements ItemStorage {
     }
 
     @Override
-    public ItemDto update (Long id, Item item, Long ownerId) {
+    public ItemDto update(Long id, Item item, Long ownerId) {
         if (Objects.equals(get(id).getOwner(), ownerId)) {
             if (Optional.ofNullable(item.getName()).isPresent()) {
                 itemMap.get(id).setName(item.getName());
@@ -54,7 +54,7 @@ public class ItemInMemoryStorage implements ItemStorage {
             }
             Optional<String> isAvailable = Optional.ofNullable(item.getAvailable());
             if (isAvailable.isPresent()) {
-                if (isAvailable.get().equals("true")){
+                if (isAvailable.get().equals("true")) {
                     itemMap.get(id).setAvailable("true");
                 } else {
                     itemMap.get(id).setAvailable("false");

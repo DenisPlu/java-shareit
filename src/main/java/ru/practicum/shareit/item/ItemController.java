@@ -17,7 +17,7 @@ public class ItemController {
     private final ItemServiceImpl itemService;
 
     @GetMapping
-    public List<ItemDto> getAll(@RequestHeader(value="X-Sharer-User-Id") Long ownerId) {
+    public List<ItemDto> getAll(@RequestHeader(value = "X-Sharer-User-Id") Long ownerId) {
         log.info("Received a request to get all items of an owner id {}", ownerId);
         return itemService.getAllByOwner(ownerId);
     }
@@ -35,7 +35,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto create(@RequestBody @Valid ItemDto item, @RequestHeader(value="X-Sharer-User-Id") Long ownerId) {
+    public ItemDto create(@RequestBody @Valid ItemDto item, @RequestHeader(value = "X-Sharer-User-Id") Long ownerId) {
         log.info("Received a request to create a new item: {}", item);
         return itemService.create(item, ownerId);
     }
@@ -47,7 +47,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete (@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         log.info("Received a request to delete a user with id: {}", id);
         itemService.delete(id);
     }
