@@ -8,16 +8,12 @@ import ru.practicum.shareit.user.User;
 
 import java.time.LocalDate;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level= AccessLevel.PRIVATE)
 public class BookingDto {
-    //Long id;
     LocalDate start;
     LocalDate end;
     User booker;

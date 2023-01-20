@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody @Valid User user){
+    public User create(@RequestBody @Valid User user) {
         log.info("Received a request to create a new user: {}", user);
         return userService.create(user);
     }

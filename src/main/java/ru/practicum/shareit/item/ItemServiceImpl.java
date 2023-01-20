@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     private final ItemInMemoryStorage itemInMemoryStorage;
     private final UserInMemoryStorage userInMemoryStorage;
 
@@ -33,9 +33,9 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public ItemDto create (ItemDto item, Long ownerId){
-        if (item.isAvailable() && Optional.ofNullable(item.getDescription()).isPresent()){
-            if (userInMemoryStorage.getUserMap().containsKey(ownerId) && item.isAvailable()){
+    public ItemDto create (ItemDto item, Long ownerId) {
+        if (item.isAvailable() && Optional.ofNullable(item.getDescription()).isPresent()) {
+            if (userInMemoryStorage.getUserMap().containsKey(ownerId) && item.isAvailable()) {
                 return itemInMemoryStorage.create(item, ownerId);
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User с заданным id в заголовке X-Sharer-User-Id не существует");

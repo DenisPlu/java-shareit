@@ -7,9 +7,14 @@ import java.util.List;
 
 public interface ItemStorage {
     List<ItemDto> getAllByOwner(Long ownerId);
+
     Item get(Long id);
+
     ItemDto create(ItemDto item, Long ownerId);
+
     ItemDto update(Long id, Item item, Long ownerId);
+
     List<ItemDto> searchInNameAndDescription(String text);
+
     void delete(Long id);
 }

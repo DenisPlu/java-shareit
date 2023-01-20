@@ -11,7 +11,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 @Getter
-public class UserInMemoryStorage implements UserStorage{
+public class UserInMemoryStorage implements UserStorage {
     private Long currentId = 1L;
     private final Map<Long, User> userMap = new HashMap<>();
 
@@ -24,14 +24,14 @@ public class UserInMemoryStorage implements UserStorage{
     public User get(Long id) {
         try {
             return userMap.get(id);
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User с данным id не существует");
         }
     }
 
     @Override
-    public User create (User user){
-        if (!user.getEmail().contains("@")){
+    public User create (User user) {
+        if (!user.getEmail().contains("@")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный формат email");
         } else {
             if (!ifEmailExist(user.getEmail())) {
@@ -46,11 +46,11 @@ public class UserInMemoryStorage implements UserStorage{
 
     @Override
     public User update (Long id, User user) {
-        if (Optional.ofNullable(user.getName()).isPresent()){
+        if (Optional.ofNullable(user.getName()).isPresent()) {
             userMap.get(id).setName(user.getName());
         }
-        if (Optional.ofNullable(user.getEmail()).isPresent()){
-            if (!user.getEmail().contains("@")){
+        if (Optional.ofNullable(user.getEmail()).isPresent()) {
+            if (!user.getEmail().contains("@")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный формат email");
             } else {
                 if (!ifEmailExist(user.getEmail())) {

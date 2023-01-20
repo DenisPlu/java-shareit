@@ -1,11 +1,10 @@
 package ru.practicum.shareit.item;
 
-import lombok.ToString;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 public class ItemMapper {
-    public static ItemDto toItemDto(Item item){
+    public static ItemDto toItemDto(Item item) {
         return new ItemDto(
                 item.getId(),
                 item.getName(),
@@ -13,7 +12,7 @@ public class ItemMapper {
                 Boolean.parseBoolean(item.getAvailable())
         );
     }
-    public static Item toItemFromDto(Long id, ItemDto itemDto, Long ownerId){
+    public static Item toItemFromDto(Long id, ItemDto itemDto, Long ownerId) {
         return new Item(
                 id,
                 itemDto.getName(),

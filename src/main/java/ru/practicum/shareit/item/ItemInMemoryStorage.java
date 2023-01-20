@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class ItemInMemoryStorage implements ItemStorage{
+public class ItemInMemoryStorage implements ItemStorage {
     private Long currentId = 1L;
     private final Map<Long, Item> itemMap = new HashMap<>();
 
@@ -31,13 +31,13 @@ public class ItemInMemoryStorage implements ItemStorage{
     public Item get(Long id) {
         try {
             return itemMap.get(id);
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item с данным id не существует");
         }
     }
 
     @Override
-    public ItemDto create(ItemDto item, Long ownerId){
+    public ItemDto create(ItemDto item, Long ownerId) {
         Item newItem = ItemMapper.toItemFromDto(currentId, item, ownerId);
         itemMap.put(currentId++, newItem);
         return ItemMapper.toItemDto(newItem);
@@ -46,14 +46,14 @@ public class ItemInMemoryStorage implements ItemStorage{
     @Override
     public ItemDto update (Long id, Item item, Long ownerId) {
         if (Objects.equals(get(id).getOwner(), ownerId)) {
-            if (Optional.ofNullable(item.getName()).isPresent()){
+            if (Optional.ofNullable(item.getName()).isPresent()) {
                 itemMap.get(id).setName(item.getName());
             }
-            if (Optional.ofNullable(item.getDescription()).isPresent()){
+            if (Optional.ofNullable(item.getDescription()).isPresent()) {
                 itemMap.get(id).setDescription(item.getDescription());
             }
             Optional<String> isAvailable = Optional.ofNullable(item.getAvailable());
-            if (isAvailable.isPresent()){
+            if (isAvailable.isPresent()) {
                 if (isAvailable.get().equals("true")){
                     itemMap.get(id).setAvailable("true");
                 } else {
@@ -67,7 +67,7 @@ public class ItemInMemoryStorage implements ItemStorage{
     }
 
     @Override
-    public List<ItemDto> searchInNameAndDescription(String text){
+    public List<ItemDto> searchInNameAndDescription(String text) {
         List<Item> itemListWithAvailableItems = itemMap.values().stream().filter(f -> f.getAvailable().equals("true")).collect(Collectors.toList());
         List<ItemDto> resultOfSearch = new ArrayList<>();
         if (!text.isEmpty()) {
