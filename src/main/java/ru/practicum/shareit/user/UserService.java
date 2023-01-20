@@ -13,14 +13,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserInMemoryStorage userInMemoryStorage;
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public List<User> getAll() {
         return userInMemoryStorage.getAll();
     }
 
-    public User getUser(Long id) {
-        return userInMemoryStorage.getUser(id);
+    public User get(Long id) {
+        return userInMemoryStorage.get(id);
     }
 
     public User create (User user){

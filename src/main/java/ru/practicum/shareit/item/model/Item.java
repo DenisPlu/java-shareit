@@ -22,10 +22,12 @@ public class Item {
     @NonNull
     @Size(max = 50)
     String name;
+    @NotBlank
+    @NonNull
     @Size(max = 200)
     String description;
-    boolean available;
-    User owner;
-    @Positive
-    Long currentRequestId;
+    @NotBlank
+    @NonNull
+    String available;
+    Long owner;
 }

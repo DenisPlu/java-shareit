@@ -6,27 +6,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 @Getter
 public class UserInMemoryStorage implements UserStorage{
     private Long currentId = 1L;
-    private List<User> userList = new ArrayList<>();
+    private final Map<Long, User> userMap = new HashMap<>();
 
     @Override
     public List<User> getAll() {
-        return userList;
+        return new ArrayList<>(userMap.values());
     }
 
     @Override
-    public User getUser(Long id) {
+    public User get(Long id) {
         try {
-            return userList.get(id.intValue() - 1);
-        } catch (NullPointerException e){
+            return userMap.get(id);
+        } catch (IndexOutOfBoundsException e){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User с данным id не существует");
         }
     }
@@ -37,8 +35,8 @@ public class UserInMemoryStorage implements UserStorage{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный формат email");
         } else {
             if (!ifEmailExist(user.getEmail())) {
-                user.setId(currentId++);
-                userList.add(user);
+                user.setId(currentId);
+                userMap.put(currentId++, user);
                 return user;
             } else {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Указанный email существует");
@@ -49,30 +47,30 @@ public class UserInMemoryStorage implements UserStorage{
     @Override
     public User update (Long id, User user) {
         if (Optional.ofNullable(user.getName()).isPresent()){
-            userList.get(id.intValue()-1).setName(user.getName());
+            userMap.get(id).setName(user.getName());
         }
         if (Optional.ofNullable(user.getEmail()).isPresent()){
             if (!user.getEmail().contains("@")){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный формат email");
             } else {
                 if (!ifEmailExist(user.getEmail())) {
-                    userList.get(id.intValue()-1).setEmail(user.getEmail());
+                    userMap.get(id).setEmail(user.getEmail());
                 } else {
                     throw new ResponseStatusException(HttpStatus.CONFLICT, "Указанный email существует");
                 }
             }
         }
-        return userList.get(id.intValue() - 1);
+        return userMap.get(id);
     }
 
     @Override
     public void delete (Long id) {
-        userList.remove(id.intValue() - 1);
+        userMap.remove(id);
     }
 
     private boolean ifEmailExist(String email) {
         boolean ifExist = false;
-        for (User carUser : userList) {
+        for (User carUser : userMap.values()) {
             if (carUser.getEmail().equals(email)) {
                 ifExist = true;
                 break;

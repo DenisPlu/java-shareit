@@ -1,44 +1,46 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
-/**
- * TODO Sprint add-controllers.
- */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/users")
 public class UserController {
     private final UserService userService;
-    // Создайте класс UserController и методы в нём для основных CRUD-операций
 
     @GetMapping
     public List<User> getAll() {
+        log.info("Received a request to get all users");
         return userService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<User> getUser(@PathVariable Long id) {
-        return Optional.ofNullable(userService.getUser(id));
+    public User get(@PathVariable Long id) {
+        log.info("Received a request to get a user with id {}", id);
+        return userService.get(id);
     }
 
     @PostMapping
-    public Optional<User> create(@RequestBody @Valid User user){
-        return Optional.ofNullable(userService.create(user));
+    public User create(@RequestBody @Valid User user){
+        log.info("Received a request to create a new user: {}", user);
+        return userService.create(user);
     }
 
     @PatchMapping("/{id}")
-    public Optional<User> update(@PathVariable Long id, @RequestBody User user) {
-        return Optional.ofNullable(userService.update(id, user));
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        log.info("Received a request to update a user with id: {}, user: {}", id, user);
+        return userService.update(id, user);
     }
 
     @DeleteMapping("/{id}")
     public void delete (@PathVariable Long id) {
+        log.info("Received a request to delete a user with id: {}", id);
         userService.delete(id);
     }
 }
