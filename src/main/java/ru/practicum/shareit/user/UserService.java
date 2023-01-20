@@ -20,7 +20,7 @@ public class UserService {
         return userInMemoryStorage.get(id);
     }
 
-    public User create(User user){
+    public User create(User user) {
         return userInMemoryStorage.create(user);
     }
 
