@@ -110,7 +110,6 @@ public class ItemServiceImpl implements ItemService {
             if (!userRepository.getReferenceById(ownerId).equals(null) && item.isAvailable()) {
                 ItemDto result = ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItemFromDto(item, ownerId)));
                 Item itemResult = itemRepository.getReferenceById(result.getId());
-                System.out.println(itemResult);
                 return result;
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User с заданным id в заголовке X-Sharer-User-Id не существует");
