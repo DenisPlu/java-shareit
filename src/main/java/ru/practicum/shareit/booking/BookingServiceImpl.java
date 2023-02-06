@@ -45,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
                 for (Booking booking: bookings) {
                     bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                             UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
-                            ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
+                            ItemMapper.toItemDtoMin(getItemFromBookingId(booking.getItemId()))));
                 }
                 break;
             case CURRENT:
@@ -53,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
                     if (booking.getStart().isBefore(LocalDateTime.now()) && booking.getEnd().isAfter(LocalDateTime.now())) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
-                                ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
+                                ItemMapper.toItemDtoMin(getItemFromBookingId(booking.getItemId()))));
                     }
                 }
                 break;
@@ -62,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
                     if (booking.getEnd().isBefore(LocalDateTime.now())) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
-                                ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
+                                ItemMapper.toItemDtoMin(getItemFromBookingId(booking.getItemId()))));
                     }
                 }
                 break;
@@ -71,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
                     if (booking.getStart().isAfter(LocalDateTime.now())) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
-                                ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
+                                ItemMapper.toItemDtoMin(getItemFromBookingId(booking.getItemId()))));
                     }
                 }
                 break;
@@ -80,7 +80,7 @@ public class BookingServiceImpl implements BookingService {
                     if (booking.getStatus().equals(BookingStatus.WAITING)) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
-                                ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
+                                ItemMapper.toItemDtoMin(getItemFromBookingId(booking.getItemId()))));
                     }
                 }
             case REJECTED:
@@ -88,7 +88,7 @@ public class BookingServiceImpl implements BookingService {
                     if (booking.getStatus().equals(BookingStatus.REJECTED)) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
-                                ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
+                                ItemMapper.toItemDtoMin(getItemFromBookingId(booking.getItemId()))));
                     }
                 }
                 break;
@@ -118,7 +118,7 @@ public class BookingServiceImpl implements BookingService {
                     || itemRepository.getReferenceById(bookingRepository.getReferenceById(id).getItemId()).getOwner().equals(userId)) {
                 return BookingMapper.toBookingDto(bookingRepository.getReferenceById(id),
                         UserMapper.toUserDtoId(userRepository.getReferenceById(bookingRepository.getReferenceById(id).getBookerId())),
-                        ItemMapper.toItemDtoMin(GetItemFromBookingId(bookingRepository.getReferenceById(id).getItemId())));
+                        ItemMapper.toItemDtoMin(getItemFromBookingId(bookingRepository.getReferenceById(id).getItemId())));
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Не корректно задан id пользователя");
             }
@@ -145,7 +145,7 @@ public class BookingServiceImpl implements BookingService {
                                 booking.setStatus(BookingStatus.WAITING);
                                 return BookingMapper.toBookingDto(bookingRepository.save(booking),
                                         UserMapper.toUserDtoId(userRepository.getReferenceById(bookerId)),
-                                        ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId())));
+                                        ItemMapper.toItemDtoMin(getItemFromBookingId(booking.getItemId())));
                             }
                         }
                     } else {
@@ -174,7 +174,7 @@ public class BookingServiceImpl implements BookingService {
                 }
                 return BookingMapper.toBookingDto(bookingRepository.save(updatedBooking),
                         UserMapper.toUserDtoId(userRepository.getReferenceById(updatedBooking.getBookerId())),
-                        ItemMapper.toItemDtoMin(GetItemFromBookingId(updatedBooking.getItemId())));
+                        ItemMapper.toItemDtoMin(getItemFromBookingId(updatedBooking.getItemId())));
             }
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Некорректно задан статус или владелец");
@@ -186,7 +186,7 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.deleteById(id);
     }
 
-    private Item GetItemFromBookingId(Long itemId) {
+    private Item getItemFromBookingId(Long itemId) {
         return itemRepository.getReferenceById(itemId);
     }
 }
