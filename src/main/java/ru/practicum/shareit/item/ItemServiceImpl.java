@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDtoWithBooking get(Long id, Long userId) {
         BookingDtoMin lastBooking = null;
         BookingDtoMin nextBooking = null;
-        if (userId.equals(itemRepository.getReferenceById(id).getOwner()) ){
+        if (userId.equals(itemRepository.getReferenceById(id).getOwner())) {
             lastBooking = findLastBooking(id);
             nextBooking = findNextBooking(id);
         }
@@ -67,14 +67,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private BookingDtoMin findLastBooking(Long id) {
-        List<Booking> ListOfBookingsByItem = bookingRepository.findByItemId(id);
-        if (ListOfBookingsByItem.isEmpty()){
+        List<Booking> listOfBookingsByItem = bookingRepository.findByItemId(id);
+        if (listOfBookingsByItem.isEmpty()) {
             return null;
         } else {
-            List<Booking> ListOfBookingsEndsBeforeNow = ListOfBookingsByItem.stream().filter(p1 -> p1.getEnd().isBefore(LocalDateTime.now()))
+            List<Booking> listOfBookingsEndsBeforeNow = listOfBookingsByItem.stream().filter(p1 -> p1.getEnd().isBefore(LocalDateTime.now()))
                     .sorted(Comparator.comparing(Booking::getEnd).reversed()).collect(Collectors.toList());
-            if (!ListOfBookingsEndsBeforeNow.isEmpty()) {
-                return BookingMapper.toBookingDtoMin(ListOfBookingsEndsBeforeNow.stream().findFirst().get());
+            if (!listOfBookingsEndsBeforeNow.isEmpty()) {
+                return BookingMapper.toBookingDtoMin(listOfBookingsEndsBeforeNow.stream().findFirst().get());
             } else {
                 return null;
             }
@@ -82,20 +82,20 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private BookingDtoMin findNextBooking(Long id) {
-        List<Booking> ListOfBookingsByItem = bookingRepository.findByItemId(id);
-        if (ListOfBookingsByItem.isEmpty()){
+        List<Booking> listOfBookingsByItem = bookingRepository.findByItemId(id);
+        if (listOfBookingsByItem.isEmpty()) {
             return null;
         } else {
-            List<Booking> ListOfBookingsStartsAfterNow = ListOfBookingsByItem.stream().filter(p1 -> p1.getStart().isAfter(LocalDateTime.now()))
+            List<Booking> listOfBookingsStartsAfterNow = listOfBookingsByItem.stream().filter(p1 -> p1.getStart().isAfter(LocalDateTime.now()))
                     .sorted(Comparator.comparing(Booking::getStart)).collect(Collectors.toList());
-            return  BookingMapper.toBookingDtoMin(ListOfBookingsStartsAfterNow.stream().findFirst().get());
+            return  BookingMapper.toBookingDtoMin(listOfBookingsStartsAfterNow.stream().findFirst().get());
         }
     }
 
     @Override
     public List<ItemDto> searchInNameAndDescription(String text) {
         List<ItemDto> itemDtoGetAllList = new ArrayList<>();
-        if (!text.isEmpty()){
+        if (!text.isEmpty()) {
             List<Item> itemListResult = itemRepository.searchInNameAndDescription(text);
             for (Item item: itemListResult) {
                 itemDtoGetAllList.add(ItemMapper.toItemDto(item));
@@ -109,8 +109,8 @@ public class ItemServiceImpl implements ItemService {
         if (item.isAvailable() && Optional.ofNullable(item.getDescription()).isPresent()) {
             if (!userRepository.getReferenceById(ownerId).equals(null) && item.isAvailable()) {
                 ItemDto result = ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItemFromDto(item, ownerId)));
-                Item ItemResult = itemRepository.getReferenceById(result.getId());
-                System.out.println(ItemResult);
+                Item itemResult = itemRepository.getReferenceById(result.getId());
+                System.out.println(itemResult);
                 return result;
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User с заданным id в заголовке X-Sharer-User-Id не существует");
@@ -124,13 +124,13 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto update(Long id, Item item, Long ownerId) {
         Item updatedItem = itemRepository.getReferenceById(id);
         if (Optional.ofNullable(userRepository.getReferenceById(ownerId)).isPresent() && itemRepository.getReferenceById(id).getOwner().equals(ownerId)) {
-            if (Optional.ofNullable(item.getName()).isPresent()){
+            if (Optional.ofNullable(item.getName()).isPresent()) {
                 updatedItem.setName(item.getName());
             }
-            if (Optional.ofNullable(item.getDescription()).isPresent()){
+            if (Optional.ofNullable(item.getDescription()).isPresent()) {
                 updatedItem.setDescription(item.getDescription());
             }
-            if (Optional.ofNullable(item.getAvailable()).isPresent()){
+            if (Optional.ofNullable(item.getAvailable()).isPresent()) {
                 updatedItem.setAvailable(item.getAvailable());
             }
             return ItemMapper.toItemDto(itemRepository.save(updatedItem));
@@ -147,7 +147,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentDto createComment(Long itemId, Long authorId, Comment comment) {
         List<Booking> bookings  = bookingRepository.findByItemId(itemId).stream().filter(p1 -> p1.getBookerId().equals(authorId))
-                .filter(p1 ->p1.getEnd().isBefore(LocalDateTime.now())).collect(Collectors.toList());
+                .filter(p1 -> p1.getEnd().isBefore(LocalDateTime.now())).collect(Collectors.toList());
         if (bookings.isEmpty() || comment.getText().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "У пользователя не было бронирований данной вещи");
         } else {

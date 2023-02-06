@@ -25,7 +25,7 @@ public class BookingController {
         try {
             BookingRequestState enumState = BookingRequestState.valueOf(state);
             return new ResponseEntity<>(bookingService.getAllByUser(enumState, userId), HttpStatus.OK);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             UnsupportedStatusException ex = new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS", "UNSUPPORTED_STATUS");
             return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
         }
@@ -37,7 +37,7 @@ public class BookingController {
         try {
             BookingRequestState enumState = BookingRequestState.valueOf(state);
             return new ResponseEntity<>(bookingService.getAllByOwner(enumState, ownerId), HttpStatus.OK);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             UnsupportedStatusException ex = new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS", "UNSUPPORTED_STATUS");
             return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
         }
@@ -46,9 +46,9 @@ public class BookingController {
     @GetMapping("/{id}")
     public BookingDto get(@PathVariable Long id, @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         log.info("Received a request to get an Booking with id {} from user {}", id, userId);
-        try{
+        try {
             return bookingService.get(id, userId);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Booking с данным id не существует");
         }
     }

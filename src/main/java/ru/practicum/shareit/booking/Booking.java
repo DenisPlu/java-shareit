@@ -19,9 +19,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @FutureOrPresent
-    @Column(name="start_date")
+    @Column(name = "start_date")
     LocalDateTime start;
-    @Column(name="end_date")
+    @Column(name = "end_date")
     @FutureOrPresent
     LocalDateTime end;
     Long bookerId;

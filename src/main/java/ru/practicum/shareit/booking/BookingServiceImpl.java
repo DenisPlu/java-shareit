@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 @Getter
 @RequiredArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
@@ -40,7 +40,7 @@ public class BookingServiceImpl implements BookingService{
 
     private List<BookingDto> filterBookingsByState(List<Booking> bookings, BookingRequestState state) {
         List<BookingDto> bookingsDtoGetList = new ArrayList<>();
-        switch (state){
+        switch (state) {
             case ALL:
                 for (Booking booking: bookings) {
                     bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
@@ -50,7 +50,7 @@ public class BookingServiceImpl implements BookingService{
                 break;
             case CURRENT:
                 for (Booking booking: bookings) {
-                    if (booking.getStart().isBefore(LocalDateTime.now()) && booking.getEnd().isAfter(LocalDateTime.now())){
+                    if (booking.getStart().isBefore(LocalDateTime.now()) && booking.getEnd().isAfter(LocalDateTime.now())) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
                                 ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
@@ -59,7 +59,7 @@ public class BookingServiceImpl implements BookingService{
                 break;
             case PAST:
                 for (Booking booking: bookings) {
-                    if (booking.getEnd().isBefore(LocalDateTime.now())){
+                    if (booking.getEnd().isBefore(LocalDateTime.now())) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
                                 ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
@@ -68,7 +68,7 @@ public class BookingServiceImpl implements BookingService{
                 break;
             case FUTURE:
                 for (Booking booking: bookings) {
-                    if (booking.getStart().isAfter(LocalDateTime.now())){
+                    if (booking.getStart().isAfter(LocalDateTime.now())) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
                                 ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
@@ -77,7 +77,7 @@ public class BookingServiceImpl implements BookingService{
                 break;
             case WAITING:
                 for (Booking booking: bookings) {
-                    if (booking.getStatus().equals(BookingStatus.WAITING)){
+                    if (booking.getStatus().equals(BookingStatus.WAITING)) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
                                 ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
@@ -85,7 +85,7 @@ public class BookingServiceImpl implements BookingService{
                 }
             case REJECTED:
                 for (Booking booking: bookings) {
-                    if (booking.getStatus().equals(BookingStatus.REJECTED)){
+                    if (booking.getStatus().equals(BookingStatus.REJECTED)) {
                         bookingsDtoGetList.add(BookingMapper.toBookingDto(booking,
                                 UserMapper.toUserDtoId(userRepository.getReferenceById(booking.getBookerId())),
                                 ItemMapper.toItemDtoMin(GetItemFromBookingId(booking.getItemId()))));
@@ -113,9 +113,9 @@ public class BookingServiceImpl implements BookingService{
 
     @Override
     public BookingDto get(Long id, Long userId) {
-        if (Optional.ofNullable(bookingRepository.getReferenceById(id)).isPresent()){
+        if (Optional.ofNullable(bookingRepository.getReferenceById(id)).isPresent()) {
             if (bookingRepository.getReferenceById(id).getBookerId().equals(userId)
-                    || itemRepository.getReferenceById(bookingRepository.getReferenceById(id).getItemId()).getOwner().equals(userId)){
+                    || itemRepository.getReferenceById(bookingRepository.getReferenceById(id).getItemId()).getOwner().equals(userId)) {
                 return BookingMapper.toBookingDto(bookingRepository.getReferenceById(id),
                         UserMapper.toUserDtoId(userRepository.getReferenceById(bookingRepository.getReferenceById(id).getBookerId())),
                         ItemMapper.toItemDtoMin(GetItemFromBookingId(bookingRepository.getReferenceById(id).getItemId())));
@@ -130,15 +130,15 @@ public class BookingServiceImpl implements BookingService{
     @Override
     public BookingDto create(Booking booking, Long bookerId) {
         try {
-            if (itemRepository.getReferenceById(booking.getItemId()).getOwner().equals(bookerId)){
+            if (itemRepository.getReferenceById(booking.getItemId()).getOwner().equals(bookerId)) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Нельзя забронировать собственную вещь");
             } else {
                 if (itemRepository.getReferenceById(booking.getItemId()).getAvailable().equals("true")) {
                     if (!userRepository.getReferenceById(bookerId).equals(null)) {
-                        if (booking.getEnd().isBefore(booking.getStart())){
+                        if (booking.getEnd().isBefore(booking.getStart())) {
                             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Дата окончания бронирования указана до начала брорирования");
                         } else {
-                            if (booking.getStart().isBefore(LocalDateTime.now())){
+                            if (booking.getStart().isBefore(LocalDateTime.now())) {
                                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Дата начала бронирования должна быть указана в будущем");
                             } else {
                                 booking.setBookerId(bookerId);
@@ -155,7 +155,7 @@ public class BookingServiceImpl implements BookingService{
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не задана Available - доступность item");
                 }
             }
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Не корректно задан item");
         }
     }
@@ -164,10 +164,10 @@ public class BookingServiceImpl implements BookingService{
     public BookingDto update(Long id, Long ownerId, String approved) {
         Booking updatedBooking = bookingRepository.getReferenceById(id);
         if (itemRepository.getReferenceById(updatedBooking.getItemId()).getOwner().equals(ownerId)) {
-            if (updatedBooking.getStatus().equals(BookingStatus.APPROVED) && approved.equals("true")){
+            if (updatedBooking.getStatus().equals(BookingStatus.APPROVED) && approved.equals("true")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректно задан статус, бронирование уже подтверждено");
             } else {
-                if (Boolean.parseBoolean(approved)){
+                if (Boolean.parseBoolean(approved)) {
                     updatedBooking.setStatus(BookingStatus.APPROVED);
                 } else {
                     updatedBooking.setStatus(BookingStatus.REJECTED);
@@ -186,7 +186,7 @@ public class BookingServiceImpl implements BookingService{
         bookingRepository.deleteById(id);
     }
 
-    private Item GetItemFromBookingId(Long itemId){
+    private Item GetItemFromBookingId(Long itemId) {
         return itemRepository.getReferenceById(itemId);
     }
 }

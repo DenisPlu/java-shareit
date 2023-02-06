@@ -31,9 +31,9 @@ public class ItemController {
     @GetMapping("/{id}")
     public ItemDtoWithBooking get(@PathVariable Long id, @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         log.info("Received a request to get an item with id {} from user {}", id, userId);
-        try{
+        try {
             return itemService.get(id, userId);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item с данным id не существует");
         }
     }

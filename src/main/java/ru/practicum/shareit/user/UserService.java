@@ -24,7 +24,7 @@ public class UserService {
         try {
             userRepository.getReferenceById(id).getName();
             return userRepository.getReferenceById(id);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User с запрошенным id не существует");
         }
     }
@@ -35,10 +35,10 @@ public class UserService {
 
     public User update(Long id, User user) {
         User curUser = userRepository.getReferenceById(id);
-        if (Optional.ofNullable(user.getName()).isPresent()){
+        if (Optional.ofNullable(user.getName()).isPresent()) {
             curUser.setName(user.getName());
         }
-        if (Optional.ofNullable(user.getEmail()).isPresent()){
+        if (Optional.ofNullable(user.getEmail()).isPresent()) {
             curUser.setEmail(user.getEmail());
         }
         return userRepository.save(curUser);
