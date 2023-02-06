@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS items (
                                      name varchar(100) NOT NULL,
                                      description varchar(512) NOT NULL,
                                      available varchar(50) NOT NULL,
-                                     owner_id bigint REFERENCES users (id)
+                                     owner_id bigint REFERENCES users (id),
+                                     item_request_id bigint REFERENCES item_requests (id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
