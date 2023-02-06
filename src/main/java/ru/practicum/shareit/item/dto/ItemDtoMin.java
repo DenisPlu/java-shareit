@@ -11,15 +11,10 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ItemDto {
+public class ItemDtoMin {
     Long id;
     @NotBlank
     @NonNull
     @Size(max = 50)
     String name;
-    @NotBlank
-    @NonNull
-    @Size(max = 200)
-    String description;
-    boolean available;
 }
