@@ -17,8 +17,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "items", schema = "public")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "items")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
