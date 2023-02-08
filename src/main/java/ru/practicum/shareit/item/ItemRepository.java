@@ -9,8 +9,6 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByOwner(Long ownerId);
 
-    //@Query("select i from Item i " +
-            //"where upper(i.name) like upper(concat('%', ?1, '%')) " +
-            //" or upper(i.description) like upper(concat('%', ?1, '%')) and (i.available) like 'true'")
+    @Query(value = "SELECT * FROM ITEMS WHERE (upper(name) like upper(concat('%', ?1, '%')) or upper(description) like upper(concat('%', ?1, '%'))) and (available) like 'true'", nativeQuery = true)
     List<Item> searchInNameAndDescription(String text);
 }
