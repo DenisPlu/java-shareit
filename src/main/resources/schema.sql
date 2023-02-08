@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS items (
                                      name varchar(100) NOT NULL,
                                      description varchar(512) NOT NULL,
                                      available varchar(50) NOT NULL,
-                                     owner_id bigint REFERENCES users (id)
+                                     owner bigint REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
