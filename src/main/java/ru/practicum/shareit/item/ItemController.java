@@ -21,15 +21,16 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemServiceImpl itemService;
+    final String USER_ID = "X-Sharer-User-Id";
 
     @GetMapping
-    public List<ItemDtoWithBooking> getAll(@RequestHeader(value = "X-Sharer-User-Id") Long ownerId) {
+    public List<ItemDtoWithBooking> getAll(@RequestHeader(value = USER_ID) Long ownerId) {
         log.info("Received a request to get all items of an owner id {}", ownerId);
         return itemService.getAllByOwner(ownerId);
     }
 
     @GetMapping("/{id}")
-    public ItemDtoWithBooking get(@PathVariable Long id, @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+    public ItemDtoWithBooking get(@PathVariable Long id, @RequestHeader(value = USER_ID) Long userId) {
         log.info("Received a request to get an item with id {} from user {}", id, userId);
         try {
             return itemService.get(id, userId);
@@ -45,13 +46,13 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto create(@RequestBody @Valid ItemDto item, @RequestHeader(value = "X-Sharer-User-Id") Long ownerId) {
+    public ItemDto create(@RequestBody @Valid ItemDto item, @RequestHeader(value = USER_ID) Long ownerId) {
         log.info("Received a request to create a new item: {}", item);
         return itemService.create(item, ownerId);
     }
 
     @PatchMapping("/{id}")
-    public ItemDto update(@PathVariable Long id, @RequestBody Item item, @RequestHeader(value = "X-Sharer-User-Id") Long ownerId) {
+    public ItemDto update(@PathVariable Long id, @RequestBody Item item, @RequestHeader(value = USER_ID) Long ownerId) {
         log.info("Received a request to update an item with id: {}, ownerId: {}, item: {}", id, ownerId, item);
         return itemService.update(id, item, ownerId);
     }
@@ -63,7 +64,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto createComment(@PathVariable Long itemId, @RequestBody Comment comment, @RequestHeader(value = "X-Sharer-User-Id") Long authorId) {
+    public CommentDto createComment(@PathVariable Long itemId, @RequestBody Comment comment, @RequestHeader(value = USER_ID) Long authorId) {
         log.info("Received a request to create a new Comment to item: {}", itemId);
         return itemService.createComment(itemId, authorId, comment);
     }

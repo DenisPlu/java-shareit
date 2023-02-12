@@ -37,7 +37,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDtoWithBooking> getAllByOwner(Long ownerId) {
         List<Item> itemListResult = itemRepository.findByOwner(ownerId);
-        System.out.println(itemListResult);
         List<ItemDtoWithBooking> itemDtoGetAllList = new ArrayList<>();
         for (Item item: itemListResult) {
             BookingDtoMin lastBooking = findLastBooking(item.getId());

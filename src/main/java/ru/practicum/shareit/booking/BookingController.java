@@ -17,10 +17,11 @@ import javax.validation.Valid;
 @RequestMapping(path = "/bookings")
 public class BookingController {
 
+    final String USER_ID = "X-Sharer-User-Id";
     private final BookingServiceImpl bookingService;
 
     @GetMapping
-    public ResponseEntity<?> getAllByUser(@RequestParam(defaultValue = "ALL") String state, @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<?> getAllByUser(@RequestParam(defaultValue = "ALL") String state, @RequestHeader(value = USER_ID) Long userId) {
         log.info("Received a request to get all Bookings of user with id {} and state of booking {}", userId, state);
         try {
             BookingRequestState enumState = BookingRequestState.valueOf(state);
@@ -32,7 +33,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<?> getAllByOwner(@RequestParam(defaultValue = "ALL") String state, @RequestHeader(value = "X-Sharer-User-Id") Long ownerId) {
+    public ResponseEntity<?> getAllByOwner(@RequestParam(defaultValue = "ALL") String state, @RequestHeader(value = USER_ID) Long ownerId) {
         log.info("Received a request to get all Bookings of an owner id {} and state of booking {}", ownerId, state);
         try {
             BookingRequestState enumState = BookingRequestState.valueOf(state);
@@ -44,7 +45,7 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public BookingDto get(@PathVariable Long id, @RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+    public BookingDto get(@PathVariable Long id, @RequestHeader(value = USER_ID) Long userId) {
         log.info("Received a request to get an Booking with id {} from user {}", id, userId);
         try {
             return bookingService.get(id, userId);
@@ -54,13 +55,13 @@ public class BookingController {
     }
 
     @PostMapping
-    public BookingDto create(@RequestBody @Valid Booking booking, @RequestHeader(value = "X-Sharer-User-Id") Long bookerId) {
+    public BookingDto create(@RequestBody @Valid Booking booking, @RequestHeader(value = USER_ID) Long bookerId) {
         log.info("Received a request to create a new Booking: {}", booking);
         return bookingService.create(booking, bookerId);
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDto update(@PathVariable Long bookingId, @RequestParam String approved, @RequestHeader(value = "X-Sharer-User-Id") Long ownerId) {
+    public BookingDto update(@PathVariable Long bookingId, @RequestParam String approved, @RequestHeader(value = USER_ID) Long ownerId) {
         log.info("Received a request to update an Booking with id: {}, ownerId: {}, status: {}", bookingId, ownerId, approved);
         return bookingService.update(bookingId, ownerId, approved);
     }

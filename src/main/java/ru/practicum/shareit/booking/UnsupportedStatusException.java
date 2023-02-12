@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Data
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class UnsupportedStatusException {
-    String error;
-    String message;
+    private String error;
+    private String message;
 
     public UnsupportedStatusException(String error, String message) {
         this.error = error;

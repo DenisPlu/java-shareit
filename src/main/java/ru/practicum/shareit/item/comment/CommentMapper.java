@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.comment;
 
-public class CommentMapper {
+public final class CommentMapper {
 
     public static CommentDto toCommentDto(Comment comment, String userName) {
         return new CommentDto(
