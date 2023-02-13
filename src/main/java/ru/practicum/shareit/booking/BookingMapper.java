@@ -6,6 +6,7 @@ import ru.practicum.shareit.item.dto.ItemDtoMin;
 import ru.practicum.shareit.user.UserDtoId;
 
 public final class BookingMapper {
+    private BookingMapper(){};
     public static BookingDto toBookingDto(Booking booking, UserDtoId user, ItemDtoMin item) {
         return new BookingDto(
                 booking.getId(),
