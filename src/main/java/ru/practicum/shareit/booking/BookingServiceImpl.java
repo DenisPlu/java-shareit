@@ -29,11 +29,18 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
-    public List<BookingDto> getAllByUser(BookingRequestState state, Long userId) {
+    public List<BookingDto> getAllByUser(BookingRequestState state, Long userId, Integer from, String size) {
         if (Optional.ofNullable(userRepository.getReferenceById(userId).getName()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователя, указанного в запросе не существует в базе");
         } else {
-            List<Booking> bookingListResult = bookingRepository.findByBookerId(userId);
+            List<Booking> bookingListResult;
+            if (size.equals("NoLimit")) {
+                bookingListResult = bookingRepository.findByBookerIdWithoutPagination(userId, from);
+            } else if ((from < 0) || (Integer.parseInt(size) < 0) || ((from == 0) && (Integer.parseInt(size) == 0))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение параметров");
+            } else {
+                bookingListResult = bookingRepository.findByBookerIdWithPagination(userId, from, Integer.parseInt(size));
+            }
             return filterBookingsByState(bookingListResult, state);
         }
     }
@@ -98,14 +105,22 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllByOwner(BookingRequestState state, Long userId) {
+    public List<BookingDto> getAllByOwner(BookingRequestState state, Long userId, Integer from, String size) {
         if (Optional.ofNullable(userRepository.getReferenceById(userId).getName()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователя, указанного в запросе не существует в базе");
         } else {
             List<Item> itemListResult = itemRepository.findByOwner(userId);
             List<Booking> bookingListResult = new ArrayList<>();
-            for (Item item : itemListResult) {
-                bookingListResult.addAll(bookingRepository.findByItemId(item.getId()));
+            if (size.equals("NoLimit")) {
+                for (Item item : itemListResult) {
+                    bookingListResult.addAll(bookingRepository.findByItemIdWithoutPagination(item.getId(), from));
+                }
+            } else if ((from < 0) || (Integer.parseInt(size) < 0) || ((from == 0) && (Integer.parseInt(size) == 0))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение параметров");
+            } else {
+                for (Item item : itemListResult) {
+                    bookingListResult.addAll(bookingRepository.findByItemIdWithPagination(item.getId(), from, Integer.parseInt(size)));
+                }
             }
             return filterBookingsByState(bookingListResult, state);
         }

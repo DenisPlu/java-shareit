@@ -1,10 +1,8 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -13,23 +11,13 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "items")
-public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ItemDtoForRequest {
     Long id;
     @NotBlank
     @NonNull
     @Size(max = 50)
     String name;
-    @NotBlank
-    @NonNull
-    @Size(max = 200)
     String description;
-    @NotBlank
-    @NonNull
-    String available;
-    Long owner;
+    boolean available;
     Long requestId;
 }
