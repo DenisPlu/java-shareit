@@ -87,7 +87,11 @@ public class ItemServiceImpl implements ItemService {
         } else {
             List<Booking> listOfBookingsStartsAfterNow = listOfBookingsByItem.stream().filter(p1 -> p1.getStart().isAfter(LocalDateTime.now()))
                     .sorted(Comparator.comparing(Booking::getStart)).collect(Collectors.toList());
-            return  BookingMapper.toBookingDtoMin(listOfBookingsStartsAfterNow.stream().findFirst().get());
+            if (listOfBookingsStartsAfterNow.isEmpty()){
+                return  null;
+            } else {
+                return BookingMapper.toBookingDtoMin(listOfBookingsStartsAfterNow.stream().findFirst().get());
+            }
         }
     }
 
@@ -108,7 +112,6 @@ public class ItemServiceImpl implements ItemService {
         if (item.isAvailable() && Optional.ofNullable(item.getDescription()).isPresent()) {
             if (!userRepository.getReferenceById(ownerId).equals(null) && item.isAvailable()) {
                 ItemDto result = ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItemFromDto(item, ownerId)));
-                Item itemResult = itemRepository.getReferenceById(result.getId());
                 return result;
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User с заданным id в заголовке X-Sharer-User-Id не существует");

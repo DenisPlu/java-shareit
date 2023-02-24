@@ -40,7 +40,7 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestDto> getAll(@RequestHeader(value = USER_ID) Long ownerId,
                                        @RequestParam(defaultValue = "0") Integer from,
-                                       @RequestParam(defaultValue = "1") Integer size) {
+                                       @RequestParam(defaultValue = "NoLimit") String size) {
         log.info("Received a request to get all ItemRequests from {} and size {}", from, size);
         return itemRequestService.getAll(from, ownerId, size);
     }

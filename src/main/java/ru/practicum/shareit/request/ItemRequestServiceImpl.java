@@ -42,7 +42,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User с заданным id в заголовке X-Sharer-User-Id не существует");
             }
         } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Не корректно задан item");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Не корректно задан User");
         }
     }
 
@@ -53,31 +53,32 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         } else {
             List<ItemRequest> itemRequestsList = itemRequestRepository.findByRequesterId(ownerId);
             List<ItemRequestDto> itemRequestsDtoList = new ArrayList<>();
-            for (ItemRequest itemRequest: itemRequestsList){
-                List<Item> itemListByRequest = itemRepository.findByRequestId(itemRequest.getId());
-                List<ItemDtoForRequest> itemDtoListByRequest = itemListByRequest.stream().map(ItemMapper::toItemDtoForRequest).collect(Collectors.toList());
-                itemRequestsDtoList.add(ItemRequestMapper.toItemRequestDto(itemRequest, itemDtoListByRequest));
-            }
-            itemRequestsDtoList.sort(Comparator.comparing(ItemRequestDto::getCreated).reversed());
-            return itemRequestsDtoList;
+            return makeItemRequestDtoList(itemRequestsDtoList, itemRequestsList);
         }
     }
 
     @Override
-    public List<ItemRequestDto> getAll(int from, Long ownerId, int size) {
-        if (from < 0 || size <= 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение параметров");
+    public List<ItemRequestDto> getAll(Integer from, Long ownerId, String size) {
+        List<ItemRequestDto> itemRequestsDtoList = new ArrayList<>();
+        List<ItemRequest> itemRequestsList;
+        if (size.equals("NoLimit")) {
+            itemRequestsList = itemRequestRepository.searchFromWithoutLimit(ownerId, from);
+        } else if ((from < 0) || (Integer.parseInt(size) < 0) || ((from == 0) && (Integer.parseInt(size) == 0))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректное значение параметров");
         } else {
-            List<ItemRequest> itemRequestsList = itemRequestRepository.searchFromWithLimit(from, ownerId, size);
-            List<ItemRequestDto> itemRequestsDtoList = new ArrayList<>();
-            for (ItemRequest itemRequest : itemRequestsList) {
-                List<Item> itemListByRequest = itemRepository.findByRequestId(itemRequest.getId());
-                List<ItemDtoForRequest> itemDtoListByRequest = itemListByRequest.stream().map(ItemMapper::toItemDtoForRequest).collect(Collectors.toList());
-                itemRequestsDtoList.add(ItemRequestMapper.toItemRequestDto(itemRequest, itemDtoListByRequest));
-            }
-            itemRequestsDtoList.sort(Comparator.comparing(ItemRequestDto::getCreated).reversed());
-            return itemRequestsDtoList;
+            itemRequestsList = itemRequestRepository.searchFromWithLimit(ownerId, Integer.parseInt(size), from);
         }
+        return makeItemRequestDtoList(itemRequestsDtoList, itemRequestsList);
+    }
+
+    private List<ItemRequestDto> makeItemRequestDtoList(List<ItemRequestDto> itemRequestsDtoList, List<ItemRequest> itemRequestsList) {
+        for (ItemRequest itemRequest : itemRequestsList) {
+            List<Item> itemListByRequest = itemRepository.findByRequestId(itemRequest.getId());
+            List<ItemDtoForRequest> itemDtoListByRequest = itemListByRequest.stream().map(ItemMapper::toItemDtoForRequest).collect(Collectors.toList());
+            itemRequestsDtoList.add(ItemRequestMapper.toItemRequestDto(itemRequest, itemDtoListByRequest));
+        }
+        itemRequestsDtoList.sort(Comparator.comparing(ItemRequestDto::getCreated).reversed());
+        return itemRequestsDtoList;
     }
 
     @Override
