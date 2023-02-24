@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -30,6 +31,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @SpringBootTest(
         properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -48,6 +50,7 @@ public class ItemServiceImplTest {
     ItemDto itemDto3;
 
     @BeforeEach
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
     void setUp() {
         user1 = new User( 1L, "User1", "user1@mail.com");
         user2 = new User( 2L, "User2", "user2@mail.com");
@@ -81,7 +84,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    @DirtiesContext
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
     void GetAllByOwnerWithCorrectRequesterIdWithoutBooking() {
         TypedQuery<Item> query = em.createQuery("SELECT i FROM Item i WHERE i.owner = :ownerId ORDER BY i.id ASC", Item.class);
         List<Item> items = query.setParameter("ownerId", 1L).getResultList();
@@ -91,7 +94,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    @DirtiesContext
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
     void GetAllByOwnerWithCorrectRequesterIdWithBooking() {
         Booking booking1 = new Booking(1L, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2), 2L, 1L, BookingStatus.WAITING);
         Booking booking2 = new Booking(2L, LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2), 2L, 2L, BookingStatus.APPROVED);
@@ -106,6 +109,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
     void CreateWithWrongOwnerId() {
         EntityNotFoundException thrown = Assertions.assertThrows(EntityNotFoundException.class, () -> {
             itemService.create(itemDto1, 99L);
@@ -114,7 +118,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    @DirtiesContext
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
     void searchInNameAndDescription() {
         TypedQuery<Item> query = em.createQuery("SELECT i FROM Item i WHERE (UPPER(i.name) LIKE UPPER(CONCAT('%', :text, '%'))" +
                 " OR UPPER(i.description) LIKE UPPER(CONCAT('%', :text, '%'))) AND (i.available) LIKE 'true'", Item.class);

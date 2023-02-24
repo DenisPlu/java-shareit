@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @SpringBootTest(
         properties = "db.name=test",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -41,9 +44,12 @@ public class ItemRequestServiceImplTest {
     ItemRequest itemRequest2;
 
     @BeforeEach
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
     void setUp() {
         user1 = new User( 1L, "User1", "user1@mail.com");
         user2 = new User( 12L, "User2", "user2@mail.com");
+        userService.create(user1);
+        userService.create(user2);
         itemRequest1 = new ItemRequest(
                 1L,
                 "Запрос дрели1",
@@ -56,14 +62,13 @@ public class ItemRequestServiceImplTest {
                 null,
                 LocalDateTime.now()
         );
+        itemRequestService.create(itemRequest1, 1L);
+        itemRequestService.create(itemRequest2, 2L);
     }
 
     @Test
+    @DirtiesContext
     void GetAllWithCorrectRequesterId() {
-        userService.create(user1);
-        userService.create(user2);
-        itemRequestService.create(itemRequest1, 1L);
-        itemRequestService.create(itemRequest2, 2L);
         TypedQuery<ItemRequest> query = em.createQuery("SELECT ir FROM ItemRequest ir WHERE ir.requesterId <> :requesterId ORDER BY ir.id DESC", ItemRequest.class);
         List<ItemRequest> itemRequests = query.setParameter("requesterId", itemRequest2.getRequesterId()).getResultList();
         assertThat(itemRequests.size(), equalTo(1));
@@ -71,6 +76,7 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
+    @DirtiesContext
     void CreateWithWrongUserId() {
         ResponseStatusException thrown = Assertions.assertThrows(ResponseStatusException.class, () -> {
             itemRequestService.create(itemRequest1, 99L);
