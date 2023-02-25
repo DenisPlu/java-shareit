@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.booking.dto.BookingDtoMin;
 import ru.practicum.shareit.item.comment.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -10,9 +11,8 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 public final class ItemMapper {
-
-    private ItemMapper(){};
     public static ItemDto toItemDto(Item item) {
         return new ItemDto(
                 item.getId(),

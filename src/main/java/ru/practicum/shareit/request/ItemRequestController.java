@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
 
-    final String USER_ID = "X-Sharer-User-Id";
+    private static final String USER_ID = "X-Sharer-User-Id";
     private final ItemRequestServiceImpl itemRequestService;
     @PostMapping
     public ItemRequest create(@RequestBody @Valid ItemRequest itemRequest,

@@ -1,8 +1,9 @@
 package ru.practicum.shareit.user;
 
-public final class UserMapper {
+import lombok.RequiredArgsConstructor;
 
-    private UserMapper(){};
+@RequiredArgsConstructor
+public final class UserMapper {
 
     public static UserDtoId toUserDtoId(User user) {
         return new UserDtoId(
