@@ -17,15 +17,18 @@ import javax.validation.Valid;
 @RequestMapping(path = "/bookings")
 public class BookingController {
 
-    final String USER_ID = "X-Sharer-User-Id";
+    private static final String USER_ID = "X-Sharer-User-Id";
     private final BookingServiceImpl bookingService;
 
     @GetMapping
-    public ResponseEntity<?> getAllByUser(@RequestParam(defaultValue = "ALL") String state, @RequestHeader(value = USER_ID) Long userId) {
-        log.info("Received a request to get all Bookings of user with id {} and state of booking {}", userId, state);
+    public ResponseEntity<?> getAllByUser(@RequestParam(defaultValue = "ALL") String state,
+                                          @RequestParam(defaultValue = "0") Integer from,
+                                          @RequestParam (defaultValue = "NoLimit") String size,
+                                          @RequestHeader(value = USER_ID) Long userId) {
+        log.info("Received a request to get all Bookings of user with id {} and state of booking {} from {} number of {}", userId, state, from, size);
         try {
             BookingRequestState enumState = BookingRequestState.valueOf(state);
-            return new ResponseEntity<>(bookingService.getAllByUser(enumState, userId), HttpStatus.OK);
+            return new ResponseEntity<>(bookingService.getAllByUser(enumState, userId, from, size), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             UnsupportedStatusException ex = new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS", "UNSUPPORTED_STATUS");
             return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
@@ -33,11 +36,14 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<?> getAllByOwner(@RequestParam(defaultValue = "ALL") String state, @RequestHeader(value = USER_ID) Long ownerId) {
+    public ResponseEntity<?> getAllByOwner(@RequestParam(defaultValue = "ALL") String state,
+                                           @RequestParam(defaultValue = "0") Integer from,
+                                           @RequestParam(defaultValue = "NoLimit") String size,
+                                           @RequestHeader(value = USER_ID) Long ownerId) {
         log.info("Received a request to get all Bookings of an owner id {} and state of booking {}", ownerId, state);
         try {
             BookingRequestState enumState = BookingRequestState.valueOf(state);
-            return new ResponseEntity<>(bookingService.getAllByOwner(enumState, ownerId), HttpStatus.OK);
+            return new ResponseEntity<>(bookingService.getAllByOwner(enumState, ownerId, from, size), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             UnsupportedStatusException ex = new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS", "UNSUPPORTED_STATUS");
             return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);

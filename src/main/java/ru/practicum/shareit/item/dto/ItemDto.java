@@ -22,4 +22,5 @@ public class ItemDto {
     @Size(max = 200)
     String description;
     boolean available;
+    Long requestId;
 }
