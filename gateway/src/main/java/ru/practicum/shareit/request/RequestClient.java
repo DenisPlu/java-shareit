@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareit.booking.dto.BookItemRequestDto;
-import ru.practicum.shareit.booking.dto.BookingRequestState;
 import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
@@ -43,18 +41,7 @@ public class RequestClient extends BaseClient {
         return get("/all?from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
+    public ResponseEntity<Object> getByRequestId(long userId, Long bookingId) {
         return get("/" + bookingId, userId);
-    }
-
-    public ResponseEntity<Object> update(Long bookingId, long userId, String approved) {
-        Map<String, Object> parameters = Map.of(
-                "approved", approved
-        );
-        return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
-    }
-
-    public ResponseEntity<Object> delete(long id) {
-        return delete("/" + id);
     }
 }

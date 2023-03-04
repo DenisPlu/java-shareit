@@ -60,7 +60,7 @@ public class BookingClient extends BaseClient {
         return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
     }
 
-    public ResponseEntity<Object> delete(long id) {
-        return delete("/" + id);
+    public void delete(long id) {
+        delete("/" + id);
     }
 }

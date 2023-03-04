@@ -23,13 +23,13 @@ public class RequestController {
     @PostMapping
     public ResponseEntity<Object> create(@RequestHeader(value = USER_ID) long requesterId,
                                          @RequestBody @Valid ItemRequest itemRequest) {
-        log.info("Creating itemRequest {}, userId={}", itemRequest, requesterId);
+        log.info("Create itemRequest {}, userId={}", itemRequest, requesterId);
         return requestClient.create(requesterId, itemRequest);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllByOwner(@RequestHeader(value = USER_ID) long userId) {
-        log.info("Received a request to get all ItemRequests of an owner id {}", userId);
+        log.info("Get all ItemRequests of an owner id {}", userId);
         return requestClient.getAllByOwner(userId);
     }
 
@@ -37,13 +37,13 @@ public class RequestController {
     public ResponseEntity<Object> getAll(@RequestHeader(value = USER_ID) long userId,
                                          @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                          @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("Received a request to get all ItemRequests from {} and size {}", from, size);
+        log.info("Get all ItemRequests from {} and size {} of user with id {}", from, size, userId);
         return requestClient.getAll(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
     public ResponseEntity<Object> getByRequestId (@RequestHeader(value = USER_ID) long userId, @PathVariable Long requestId) {
-        log.info("Get request {}, userId={}", requestId, userId);
-        return requestClient.getBooking(userId, requestId);
+        log.info("Get all ItemRequests{}, userId={}", requestId, userId);
+        return requestClient.getByRequestId(userId, requestId);
     }
 }

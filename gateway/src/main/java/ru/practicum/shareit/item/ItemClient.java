@@ -48,8 +48,8 @@ public class ItemClient extends BaseClient {
         return patch("/" + id, ownerId, itemDto);
     }
 
-    public ResponseEntity<Object> delete(long id) {
-        return delete("/" + id);
+    public void delete(long id) {
+        delete("/" + id);
     }
 
     public ResponseEntity<Object> createComment(Long itemId, Comment comment, Long authorId) {

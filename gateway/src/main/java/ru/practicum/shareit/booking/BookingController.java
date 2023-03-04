@@ -26,12 +26,12 @@ public class BookingController {
 
 	@GetMapping
 	public ResponseEntity<?> getAllByUser(@RequestHeader(value = USER_ID) long userId,
-			@RequestParam(name = "state", defaultValue = "all") String stateParam,
-			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-			@Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+										  @RequestParam(name = "state", defaultValue = "all") String stateParam,
+										  @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+										  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
 		try{
 			BookingRequestState state = BookingRequestState.from(stateParam).get();
-			log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+			log.info("Get bookings with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
 			return bookingClient.getAllByUser(userId, state, from, size);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS"), HttpStatus.BAD_REQUEST);
@@ -45,7 +45,7 @@ public class BookingController {
 											   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
 		try{
 			BookingRequestState state = BookingRequestState.from(stateParam).get();
-			log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+			log.info("Get bookings with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
 			return bookingClient.getAllByOwner(userId, state, from, size);
 		} catch (Exception e) {
 			return new ResponseEntity<>(new UnsupportedStatusException("Unknown state: UNSUPPORTED_STATUS"), HttpStatus.BAD_REQUEST);
@@ -69,13 +69,13 @@ public class BookingController {
 	public ResponseEntity<Object> update(@PathVariable Long bookingId,
 										 @RequestHeader(value = USER_ID) long userId,
 										 @RequestParam String approved) {
-		log.info("Received a request to update an Booking with id: {}, ownerId: {}, status: {}", bookingId, userId, approved);
+		log.info("Update Booking with id: {}, ownerId: {}, status: {}", bookingId, userId, approved);
 		return bookingClient.update(bookingId, userId, approved);
 	}
 
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable Long id) {
-		log.info("Received a request to delete a Booking with id: {}", id);
+		log.info("Delete Booking with id: {}", id);
 		bookingClient.delete(id);
 	}
 }
