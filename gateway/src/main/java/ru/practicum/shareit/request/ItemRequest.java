@@ -13,9 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ItemRequest {
     Long id;
+
     @NotBlank
     @Size(max = 200)
     String description;
+
     Long requesterId;
+
     LocalDateTime created;
 }

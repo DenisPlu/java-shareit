@@ -11,11 +11,7 @@ public enum BookingRequestState {
 	WAITING;
 
 	public static Optional<BookingRequestState> from(String stringState) {
-		for (BookingRequestState state : values()) {
-			if (state.name().equalsIgnoreCase(stringState)) {
-				return Optional.of(state);
-			}
-		}
-		return Optional.empty();
+			BookingRequestState state = BookingRequestState.valueOf(stringState);
+			return Optional.of(state);
 	}
 }

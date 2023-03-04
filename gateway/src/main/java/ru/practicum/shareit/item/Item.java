@@ -13,17 +13,22 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class Item {
     Long id;
+
     @NonNull
     @NotBlank
     @Size(max = 50)
     String name;
+
     @NonNull
     @NotBlank
     @Size(max = 200)
     String description;
+
     @NonNull
     @NotBlank
     String available;
+
     Long owner;
+
     Long requestId;
 }
